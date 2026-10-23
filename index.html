@@ -79,6 +79,13 @@ summary{font-weight:700;padding:4px 0;cursor:pointer}
 </select>
 <label for="mode">الناتج</label>
 <select id="mode"><option value="video">فيديو (بيتسجّل جودة عالية)</option><option value="html">صفحة HTML متحركة</option></select>
+<label for="bgmode">الخلفية</label>
+<select id="bgmode">
+<option value="auto" selected>تلقائي (حسب الوصف)</option>
+<option value="colorful">ملوّنة ومبهجة</option>
+<option value="black">أسود سادة (للدمج Screen في المونتاج)</option>
+<option value="green">أخضر سادة (Chroma Key)</option>
+</select>
 <button class="btn" id="go">ولّد B-Roll</button>
 <button class="btn" id="demo" style="background:var(--l);color:var(--t);margin-top:8px">جرّب مشهد تجريبي (من غير سيرفر)</button>
 <div id="st"></div>
@@ -276,20 +283,22 @@ $('#go').onclick=async()=>{
     const res=await fetch(endpoint,{
       method:'POST',signal:ac.signal,
       headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify({license:$('#license').value.trim(),prompt:desc,ratio:$('#ratio').value,duration:+$('#dur').value||8,style:$('#style').value,mode:$('#mode').value})
+      body:JSON.stringify({license:$('#license').value.trim(),prompt:desc,ratio:$('#ratio').value,duration:+$('#dur').value||8,style:$('#style').value,mode:$('#mode').value,bgmode:$('#bgmode').value})
     });
     if(!res.ok)throw new Error('فشل الاتصال بالسيرفر: '+res.status);
     const txt=await res.text();
-    let raw=txt;
+    let raw=txt,fb=false;
     try{
       const data=JSON.parse(txt);
       if(data&&data.error)throw new Error(typeof data.error==='string'?data.error:JSON.stringify(data.error));
       raw=typeof data==='string'?data:(data&&(data.code||data.result||data.text))||'';
+      fb=!!(data&&data.fallback);
     }catch(pe){if(pe.message&&txt.trim().startsWith('{'))throw pe}
     const code=extract(raw);
     if(!code)throw new Error('لم يتم استلام كود من السيرفر');
     const err=setCode(code);
     if(err){busy(false,'⚠️ '+err+' (الكود موجود في قسم الكود)');toast(err)}
+    else if(fb){busy(false,'⚠️ اتعمل تصميم بسيط لأن النموذج مقدرش ينفّذ الوصف كامل. جرّب تولّد تاني أو بسّط الوصف (الطلب ده مش بيتخصم).');toast('تصميم بسيط (من غير خصم)')}
     else{busy(false,'تم التوليد بنجاح!');toast('تم إنشاء المشهد')}
   }catch(err){
     const m=err.name==='AbortError'?'السيرفر اتأخر، جرّب تاني':err.message;
