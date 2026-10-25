@@ -295,18 +295,18 @@ $('#go').onclick=async()=>{
     });
     if(!res.ok)throw new Error('فشل الاتصال بالسيرفر: '+res.status);
     const txt=await res.text();
-    let raw=txt,fb=false,ver='';
+    let raw=txt,fb=false,ver='',rs='';
     try{
       const data=JSON.parse(txt);
       if(data&&data.error)throw new Error(typeof data.error==='string'?data.error:JSON.stringify(data.error));
       raw=typeof data==='string'?data:(data&&(data.code||data.result||data.text))||'';
-      fb=!!(data&&data.fallback);ver=(data&&data.version)||'';
+      fb=!!(data&&data.fallback);ver=(data&&data.version)||'';rs=(data&&data.reason)||'';
     }catch(pe){if(pe.message&&txt.trim().startsWith('{'))throw pe}
     const code=extract(raw);
     if(!code)throw new Error('لم يتم استلام كود من السيرفر');
     const err=setCode(code);
     if(err){busy(false,'⚠️ '+err+' | نسخة السيرفر: '+(ver||'قديمة أو مش معروفة (اعمل Deploy جديد للسكريبت)')+' | بداية الرد: '+String(raw).replace(/\s+/g,' ').slice(0,140));toast('الرد مش صالح')}
-    else if(fb){busy(false,'⚠️ اتعمل تصميم بسيط لأن النموذج مقدرش ينفّذ الوصف كامل. جرّب تولّد تاني أو بسّط الوصف (الطلب ده مش بيتخصم).');toast('تصميم بسيط (من غير خصم)')}
+    else if(fb){busy(false,'⚠️ اتعمل تصميم بسيط لأن النموذج مقدرش ينفّذ الوصف كامل. جرّب تولّد تاني أو بسّط الوصف (الطلب ده مش بيتخصم). السبب: '+(rs||'غير معروف'));toast('تصميم بسيط (من غير خصم)')}
     else{busy(false,'تم التوليد بنجاح!');toast('تم إنشاء المشهد')}
   }catch(err){
     const m=err.name==='AbortError'?'السيرفر اتأخر، جرّب تاني':err.message;
