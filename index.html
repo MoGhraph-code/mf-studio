@@ -252,9 +252,16 @@ function preview(){
 }
 
 function extract(raw){
-  raw=String(raw||'');
-  const m=raw.match(/```[\w-]*\s*\n([\s\S]*?)```/);
-  return (m?m[1]:raw.replace(/^\s*```[\w-]*\s*/,'').replace(/```\s*$/,'')).trim();
+  raw=String(raw||'').trim();
+  if(raw.indexOf('```')!==-1){
+    const m=raw.match(/```[\w-]*\s*\n([\s\S]*?)```/);
+    raw=(m?m[1]:raw.replace(/^\s*```[\w-]*\s*/,'').replace(/```\s*$/,'')).trim();
+  }
+  if(!isHtml(raw)&&!/function\s+render\b/.test(raw)){
+    const i=raw.search(/<!doctype|<html/i);
+    if(i>0)raw=raw.slice(i);
+  }
+  return raw;
 }
 function check(c){
   if(!c)return'مفيش كود';
@@ -263,6 +270,7 @@ function check(c){
   return'';
 }
 function setCode(code){
+  if(code&&!isHtml(code)&&/\brender\b/.test(code)&&!/\bDURATION\b/.test(code))code='const DURATION='+(+$('#dur').value||8)+';\n'+code;
   rawCode=code;$('#code').value=code;
   const err=check(code);
   if(!err)preview();
@@ -287,17 +295,17 @@ $('#go').onclick=async()=>{
     });
     if(!res.ok)throw new Error('فشل الاتصال بالسيرفر: '+res.status);
     const txt=await res.text();
-    let raw=txt,fb=false;
+    let raw=txt,fb=false,ver='';
     try{
       const data=JSON.parse(txt);
       if(data&&data.error)throw new Error(typeof data.error==='string'?data.error:JSON.stringify(data.error));
       raw=typeof data==='string'?data:(data&&(data.code||data.result||data.text))||'';
-      fb=!!(data&&data.fallback);
+      fb=!!(data&&data.fallback);ver=(data&&data.version)||'';
     }catch(pe){if(pe.message&&txt.trim().startsWith('{'))throw pe}
     const code=extract(raw);
     if(!code)throw new Error('لم يتم استلام كود من السيرفر');
     const err=setCode(code);
-    if(err){busy(false,'⚠️ '+err+' (الكود موجود في قسم الكود)');toast(err)}
+    if(err){busy(false,'⚠️ '+err+' | نسخة السيرفر: '+(ver||'قديمة أو مش معروفة (اعمل Deploy جديد للسكريبت)')+' | بداية الرد: '+String(raw).replace(/\s+/g,' ').slice(0,140));toast('الرد مش صالح')}
     else if(fb){busy(false,'⚠️ اتعمل تصميم بسيط لأن النموذج مقدرش ينفّذ الوصف كامل. جرّب تولّد تاني أو بسّط الوصف (الطلب ده مش بيتخصم).');toast('تصميم بسيط (من غير خصم)')}
     else{busy(false,'تم التوليد بنجاح!');toast('تم إنشاء المشهد')}
   }catch(err){
