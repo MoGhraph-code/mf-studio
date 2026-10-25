@@ -278,7 +278,7 @@ $('#go').onclick=async()=>{
   if(!/^https:\/\//i.test(endpoint)){toast('رابط السيرفر لسه متحطش في الكود');return}
   if(!$('#license').value.trim()){toast('ادخل كود التفعيل في الإعدادات');tab('set');return}
   busy(true,'جاري توليد الـ B-Roll...');
-  const ac=new AbortController(),to=setTimeout(()=>ac.abort(),240000);
+  const ac=new AbortController(),to=setTimeout(()=>ac.abort(),300000),t0=Date.now(),iv=setInterval(()=>{$('#st').textContent='جاري التوليد... '+Math.round((Date.now()-t0)/1000)+' ث (ممكن ياخد لحد دقيقتين)'},1000);
   try{
     const res=await fetch(endpoint,{
       method:'POST',signal:ac.signal,
@@ -303,7 +303,7 @@ $('#go').onclick=async()=>{
   }catch(err){
     const m=err.name==='AbortError'?'السيرفر اتأخر، جرّب تاني':err.message;
     busy(false,'حدث خطأ: '+m);toast(m);
-  }finally{clearTimeout(to)}
+  }finally{clearTimeout(to);clearInterval(iv)}
 };
 
 /* ===== مشهد تجريبي ===== */
