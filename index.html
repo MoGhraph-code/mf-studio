@@ -57,6 +57,8 @@ summary{font-weight:700;padding:4px 0;cursor:pointer}
 <section id="new" class="on">
 <label for="desc">وصف الـ B-Roll</label>
 <textarea id="desc" placeholder="مثال: رسم بياني بيطلع بالتدريج بيوضح نمو المشتركين من 0 لـ 100 ألف، بألوان هادية"></textarea>
+<label for="texts">النص اللي يظهر على الشاشة بالظبط (اختياري)</label>
+<textarea id="texts" style="min-height:60px" placeholder="الكلام اللي عايزه يظهر حرفياً (كل سطر منفصل). الوصف اللي فوق يبقى للحركة والشكل بس"></textarea>
 <div class="row">
 <div>
   <label for="ratio">النسبة</label>
@@ -291,23 +293,23 @@ $('#go').onclick=async()=>{
     const res=await fetch(endpoint,{
       method:'POST',signal:ac.signal,
       headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify({license:$('#license').value.trim(),prompt:desc,ratio:$('#ratio').value,duration:+$('#dur').value||8,style:$('#style').value,mode:$('#mode').value,bgmode:$('#bgmode').value})
+      body:JSON.stringify({license:$('#license').value.trim(),prompt:desc,texts:$('#texts').value.trim().replace(/\n+/g,' | '),ratio:$('#ratio').value,duration:+$('#dur').value||8,style:$('#style').value,mode:$('#mode').value,bgmode:$('#bgmode').value})
     });
     if(!res.ok)throw new Error('فشل الاتصال بالسيرفر: '+res.status);
     const txt=await res.text();
-    let raw=txt,fb=false,ver='',rs='';
+    let raw=txt,fb=false,ver='',rs='',ws='';
     try{
       const data=JSON.parse(txt);
       if(data&&data.error)throw new Error(typeof data.error==='string'?data.error:JSON.stringify(data.error));
       raw=typeof data==='string'?data:(data&&(data.code||data.result||data.text))||'';
-      fb=!!(data&&data.fallback);ver=(data&&data.version)||'';rs=(data&&data.reason)||'';
+      fb=!!(data&&data.fallback);ver=(data&&data.version)||'';rs=(data&&data.reason)||'';ws=(data&&data.warnings)||'';
     }catch(pe){if(pe.message&&txt.trim().startsWith('{'))throw pe}
     const code=extract(raw);
     if(!code)throw new Error('لم يتم استلام كود من السيرفر');
     const err=setCode(code);
     if(err){busy(false,'⚠️ '+err+' | نسخة السيرفر: '+(ver||'قديمة أو مش معروفة (اعمل Deploy جديد للسكريبت)')+' | بداية الرد: '+String(raw).replace(/\s+/g,' ').slice(0,140));toast('الرد مش صالح')}
     else if(fb){busy(false,'⚠️ اتعمل تصميم بسيط لأن النموذج مقدرش ينفّذ الوصف كامل. جرّب تولّد تاني أو بسّط الوصف (الطلب ده مش بيتخصم). السبب: '+(rs||'غير معروف'));toast('تصميم بسيط (من غير خصم)')}
-    else{busy(false,'تم التوليد بنجاح!');toast('تم إنشاء المشهد')}
+    else{busy(false,ws?'تم التوليد، بس ممكن يكون في نقاط ناقصة من الوصف: '+String(ws).replace(/\s+/g,' ').slice(0,300):'تم التوليد بنجاح!');toast('تم إنشاء المشهد')}
   }catch(err){
     const m=err.name==='AbortError'?'السيرفر اتأخر، جرّب تاني':err.message;
     busy(false,'حدث خطأ: '+m);toast(m);
