@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0E1A21">
 <title>MotionForge</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
 <style>
 :root{--bg:#0E1A21;--p:#15262E;--l:#243842;--t:#E9F0F2;--m:#8199A3;--a:#FFB547;--r:#FF7A6B}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -15,7 +17,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:6px
 h1{font-size:22px;margin:0;font-weight:800}
 .tc{font:600 13px ui-monospace,Menlo,monospace;color:var(--a);border:1px solid var(--a);border-radius:6px;padding:2px 8px;direction:ltr}
 .tabs{display:flex;gap:4px;background:var(--p);padding:4px;border-radius:12px;margin-bottom:14px}
-.tabs button{flex:1;border:0;background:none;color:var(--m);font:inherit;font-weight:700;padding:8px;border-radius:9px;cursor:pointer}
+.tabs button{flex:1;border:0;background:none;color:var(--m);font:inherit;font-weight:700;padding:8px;border-radius:9px}
 .tabs .on{background:var(--bg);color:var(--a)}
 section{display:none}section.on{display:block}
 [hidden]{display:none!important}
@@ -25,31 +27,31 @@ textarea{min-height:110px;resize:vertical}
 textarea.code{direction:ltr;text-align:left;font:13px/1.5 ui-monospace,Menlo,monospace;min-height:200px}
 textarea:focus,input:focus,select:focus{outline:2px solid var(--a);outline-offset:1px}
 .row{display:flex;gap:8px}.row>div{flex:1}
-.btn{border:0;border-radius:12px;font:inherit;font-weight:800;padding:12px 14px;background:var(--a);color:#0E1A21;width:100%;margin-top:14px;cursor:pointer}
-button:disabled,select:disabled{opacity:.5;cursor:not-allowed}
-.g{background:none;border:1px solid var(--l);color:var(--t);font:inherit;font-weight:600;margin:0;padding:9px 10px;border-radius:10px;font-size:14px;flex:1;cursor:pointer}
+.btn{border:0;border-radius:12px;font:inherit;font-weight:800;padding:12px 14px;background:var(--a);color:#0E1A21;width:100%;margin-top:14px}
+.btn:disabled{opacity:.5}
+.g{background:none;border:1px solid var(--l);color:var(--t);font-weight:600;margin:0;padding:9px 10px;border-radius:10px;font-size:14px;flex:1}
 .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.st{aspect-ratio:var(--ar,.45);width:min(100%,calc(62vh*var(--ar,.45)));background:#000;border-radius:12px;overflow:hidden;margin:14px auto 0}
+.st{aspect-ratio:var(--ar);width:min(100%,calc(62vh*var(--ar)));background:#000;border-radius:12px;overflow:hidden;margin:14px auto 0}
 .st iframe{width:100%;height:100%;border:0;display:block}
-.bar{height:3px;width:min(100%,calc(62vh*var(--ar,.45)));margin:0 auto;background:var(--a);transform-origin:right;transform:scaleX(0)}
+.bar{height:3px;width:min(100%,calc(62vh*var(--ar)));margin:0 auto;background:var(--a);transform-origin:right;transform:scaleX(0)}
 .bar.go{animation:sw var(--d) linear forwards}
 @keyframes sw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 details{background:var(--p);border:1px solid var(--l);border-radius:12px;padding:8px 12px;margin-top:12px}
-summary{font-weight:700;padding:4px 0;cursor:pointer}
+summary{font-weight:700;padding:4px 0}
 #st{min-height:24px;color:var(--m);font-size:14px;margin-top:8px}
 .it{display:flex;align-items:center;gap:8px;background:var(--p);border:1px solid var(--l);border-radius:12px;padding:10px 12px;margin-bottom:8px}
 .it b{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.it small{color:var(--m)}
 .it .g{flex:none}
 .note{color:var(--m);font-size:13px;margin-top:10px}
-.tweaks-box{background:var(--p);border:1px solid var(--l);border-radius:12px;padding:12px;margin-top:12px}
-#toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--t);color:var(--bg);padding:8px 16px;border-radius:20px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%;text-align:center;z-index:999}
+#toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--t);color:var(--bg);padding:8px 16px;border-radius:20px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%;text-align:center}
 #toast.on{opacity:1}
 @media(prefers-reduced-motion:reduce){.bar.go{animation:none;transform:scaleX(1)}}
+.g.on{border-color:var(--a);color:var(--a)}
 </style>
 </head>
 <body>
 <div class="w">
-<header><h1>MotionForge</h1><span class="tc" id="tc">00:08</span></header>
+<header><h1>MotionForge</h1><span style="display:flex;gap:6px"><span class="tc" id="tc">00:08</span></span></header>
 <div class="tabs" id="tabs">
 <button data-t="new" class="on">جديد</button><button data-t="lib">المحفوظات</button><button data-t="set">الإعدادات</button>
 </div>
@@ -57,18 +59,8 @@ summary{font-weight:700;padding:4px 0;cursor:pointer}
 <section id="new" class="on">
 <label for="desc">وصف الـ B-Roll</label>
 <textarea id="desc" placeholder="مثال: رسم بياني بيطلع بالتدريج بيوضح نمو المشتركين من 0 لـ 100 ألف، بألوان هادية"></textarea>
-<label for="texts">النص اللي يظهر على الشاشة بالظبط (اختياري)</label>
-<textarea id="texts" style="min-height:60px" placeholder="الكلام اللي عايزه يظهر حرفياً (كل سطر منفصل). الوصف اللي فوق يبقى للحركة والشكل بس"></textarea>
 <div class="row">
-<div>
-  <label for="ratio">النسبة</label>
-  <select id="ratio">
-    <option value="9:16" selected>9:16 طولي (ريلز / تيك توك)</option>
-    <option value="9:20">9:20 طولي كامل للموبايل</option>
-    <option value="16:9">16:9 عرضي</option>
-    <option value="1:1">1:1 مربع</option>
-  </select>
-</div>
+<div><label for="ratio">النسبة</label><select id="ratio"><option value="16:9">16:9 عرضي</option><option value="9:16">9:16 طولي</option><option value="1:1">1:1 مربع</option></select></div>
 <div><label for="dur">المدة</label><select id="dur"><option>4</option><option>6</option><option selected>8</option><option>12</option><option>15</option></select></div>
 </div>
 <label for="style">الستايل</label>
@@ -81,25 +73,21 @@ summary{font-weight:700;padding:4px 0;cursor:pointer}
 </select>
 <label for="mode">الناتج</label>
 <select id="mode"><option value="video">فيديو (بيتسجّل جودة عالية)</option><option value="html">صفحة HTML متحركة</option></select>
-<label for="bgmode">الخلفية</label>
-<select id="bgmode">
-<option value="auto" selected>تلقائي (حسب الوصف)</option>
-<option value="colorful">ملوّنة ومبهجة</option>
-<option value="black">أسود سادة (للدمج Screen في المونتاج)</option>
-<option value="green">أخضر سادة (Chroma Key)</option>
-</select>
 <button class="btn" id="go">ولّد B-Roll</button>
-<button class="btn" id="demo" style="background:var(--l);color:var(--t);margin-top:8px">جرّب مشهد تجريبي (من غير سيرفر)</button>
 <div id="st"></div>
 
 <div class="st" id="stage"><iframe id="fr" sandbox="allow-scripts" title="معاينة"></iframe></div>
 <div class="bar" id="bar"></div>
-
-
 <div class="acts">
 <button class="g" id="replay">إعادة تشغيل</button><button class="g" id="full">ملء الشاشة</button>
 </div>
 
+<details><summary>البرومبت (تقدر تعدّل عليه)</summary>
+<div class="acts" style="margin:8px 0"><button class="g on" id="plar">عربي</button><button class="g" id="plen">English</button></div>
+<textarea id="prompt" dir="rtl" placeholder="هيظهر هنا بعد التوليد"></textarea>
+<div class="note" id="pnote"></div>
+<button class="btn" id="regen">حوّل البرومبت لكود من جديد</button>
+</details>
 <textarea id="code" hidden></textarea>
 
 <button class="btn" id="rec">سجّل فيديو عالي الجودة</button>
@@ -112,343 +100,183 @@ summary{font-weight:700;padding:4px 0;cursor:pointer}
 <button class="g" id="save">حفظ في المحفوظات</button><button class="g" id="dl">تنزيل HTML</button>
 <button class="g" id="sh">مشاركة</button>
 </div>
-<p class="note">لو عايز تعديل: عدّل الوصف وولّد من جديد. التسجيل بيتم في الوقت الحقيقي بجودة عالية، وبيطلع MP4 أو WebM. سيب الشاشة مفتوحة وقت التسجيل.</p>
+<p class="note">التسجيل بيتم في الوقت الحقيقي بجودة 1080p، وبيطلع MP4 لو المتصفح يدعمه، وإلا WebM. سيب الشاشة مفتوحة وماتطلعش من التطبيق وقت التسجيل. مفيش صوت في الفيديو.</p>
 </section>
 
 <section id="lib"><div id="list"></div></section>
 
 <section id="set">
-<label for="license">كود التفعيل (License Key)</label>
-<input id="license" type="text" autocomplete="off" placeholder="ادخل كود التفعيل الخاص بك">
-<button class="btn" id="saveset">حفظ الإعدادات</button>
-<p class="note">الإعدادات مخزنة محلياً على جهازك.</p>
+<label for="acode">كود التفعيل</label>
+<input id="acode" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="اكتب الكود اللي وصلك" style="direction:ltr;text-align:left">
+<button class="btn" id="abtn">تفعيل</button>
+<div id="astat" class="note"></div>
+<button class="g" id="aout" style="width:100%;margin-top:10px" hidden>إلغاء التفعيل على الجهاز ده</button>
+<p class="note">كود التفعيل بيوصلك من صاحب التطبيق. بعد التفعيل التطبيق بيشتغل علطول، والمحفوظات بتتخزن على جهازك بس.</p>
 </section>
 </div>
 <div id="toast"></div>
 
 <script>
+// ===== حط هنا رابط الـ Web App بتاع جوجل شيت (بينتهي بـ /exec) =====
+const SERVER_URL='PASTE_WEB_APP_URL_HERE';
 const $=s=>document.querySelector(s);
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let tt;
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2800)}
-const ls={
-  get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},
-  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast('مفيش مساحة تخزين كفاية');return false}}
-};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ls={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast('مفيش مساحة تخزين كفاية');return false}}};
+const SIZE={'16:9':[1920,1080],'9:16':[1080,1920],'1:1':[1080,1080]};
+let cur={},tt;
 
-const SIZE={'16:9':[1920,1080],'9:16':[1080,1920],'9:20':[1080,2400],'1:1':[1080,1080]};
-const SERVER_URL='https://script.google.com/macros/s/AKfycbxgkSN_L9wynf2-ZyekKJQPRI2Bw0B_vQTn_RbbeEkHjZX-5o8uD-h9Ppf5I57QXQhf/exec'; /* رابط السيرفر (Web App URL) */
-let recording=false,recT=null,tweakScale=1,rawCode='',vidUrl='';
-
-const isHtml=c=>/^\s*(<!doctype|<html)/i.test(c);
-const fmt=d=>{d=Math.round(d);return String(Math.floor(d/60)).padStart(2,'0')+':'+String(d%60).padStart(2,'0')};
-
-function tab(n){
-  document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===n));
-  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===n));
-  if(n==='lib')renderLib();
-}
-$('#tabs').onclick=e=>{if(e.target.dataset&&e.target.dataset.t)tab(e.target.dataset.t)};
-
-function tc(){$('#tc').textContent=fmt(+$('#dur').value||8)}
-function stageRatio(){const s=SIZE[$('#ratio').value]||SIZE['9:16'];const r=s[0]/s[1];$('#stage').style.setProperty('--ar',r);$('#bar').style.setProperty('--ar',r)}
-function restartBar(d){const b=$('#bar');b.style.setProperty('--d',d+'s');b.classList.remove('go');void b.offsetWidth;b.classList.add('go')}
-
-$('#dur').onchange=()=>{tc();preview()};
-$('#ratio').onchange=()=>{stageRatio();preview()};
-$('#license').value=ls.get('license','');
-$('#saveset').onclick=()=>{
-  ls.set('license',$('#license').value.trim());
-  toast('تم حفظ الإعدادات');tab('new');
-};
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2600)}
+function tab(n){document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===n));document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===n));if(n==='lib')renderLib()}
+$('#tabs').onclick=e=>{if(e.target.dataset.t)tab(e.target.dataset.t)};
+function tc(){const d=+$('#dur').value;$('#tc').textContent='00:'+String(d).padStart(2,'0')}
+function stageRatio(){const [w,h]=SIZE[$('#ratio').value];$('#stage').style.setProperty('--ar',w/h);$('#bar').style.setProperty('--ar',w/h)}
+$('#dur').onchange=tc;$('#ratio').onchange=stageRatio;
 tc();stageRatio();
 
-/* ===== كود بيتشغّل جوه الـ iframe (لازم يكون مستقل) ===== */
+const clean=t=>{const m=t.match(/```[a-z]*\s*([\s\S]*?)```/i);return(m?m[1]:t).trim()};
 function rt(W,H){
   const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
-  const fd=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'font');
-  const sf=v=>fd.set.call(ctx,v);
-  Object.defineProperty(ctx,'font',{configurable:true,get(){return fd.get.call(ctx)},set(v){
-    const s=window.__scale||1;
-    sf(s===1?v:String(v).replace(/(\d+(?:\.\d+)?)px/,(m,n)=>(n*s)+'px'));
-  }});
-  const D=()=>Math.min(60,Math.max(1,+window.__d||8));
-  let t0=performance.now(),rec=null,reported=false,frames=0,rs=0;
-  const say=m=>{if(reported)return;reported=true;parent.postMessage({jserr:String(m).slice(0,160)},'*')};
-  if(window.__e)say(window.__e);
-
+  const D=()=>Math.min(60,Math.max(1,+window.__d||8));let t0=performance.now(),rec=null;
   function draw(t){
     ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.shadowBlur=0;ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
-    try{
-      if(!window.__r){
-        ctx.fillStyle='#8199A3';sf('30px Cairo, Tahoma, sans-serif');ctx.textAlign='center';ctx.textBaseline='middle';
-        ctx.fillText(window.__e?'الكود فيه مشكلة':'جاري التحميل...',W/2,H/2);return;
-      }
-      window.__r(ctx,Math.min(t,D()),W,H);
-    }catch(e){
-      say(e.message);
-      if(rec)return;
-      ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
-      ctx.fillStyle='#FF7A6B';sf('bold 34px Cairo, Tahoma, sans-serif');ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillText('خطأ في كود الرسم',W/2,H/2-40);
-      sf('22px monospace');ctx.fillStyle='#E9F0F2';ctx.fillText(String(e.message).slice(0,50),W/2,H/2+20);
-    }
+    try{if(!window.__r)throw new Error(window.__e||'render مش موجودة');window.__r(ctx,Math.min(t,D()),W,H)}
+    catch(e){ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.fillStyle='#FF7A6B';ctx.font='40px sans-serif';ctx.fillText(String(e.message).slice(0,70),40,90)}
   }
-  function loop(n){let t=(n-t0)/1000;if(!rec)t%=D();else frames++;draw(t);requestAnimationFrame(loop)}
-
+  function loop(n){let t=(n-t0)/1000;if(!rec)t%=D();draw(t);requestAnimationFrame(loop)}
+  requestAnimationFrame(loop);
   addEventListener('message',e=>{
     if(!e.data||e.data.cmd!=='rec'||rec)return;
     const ts=['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
     const mt=window.MediaRecorder&&ts.find(x=>MediaRecorder.isTypeSupported(x));
     if(!mt)return parent.postMessage({err:'المتصفح مش بيدعم تسجيل الفيديو'},'*');
     const ch=[];let mr;
-    try{
-      const st=cv.captureStream(30);
-      try{mr=new MediaRecorder(st,{mimeType:mt,videoBitsPerSecond:16000000})}
-      catch(x){mr=new MediaRecorder(st,{mimeType:mt})}
-    }catch(x){return parent.postMessage({err:String(x.message)},'*')}
-    mr.ondataavailable=v=>{if(v.data&&v.data.size)ch.push(v.data)};
+    try{mr=new MediaRecorder(cv.captureStream(30),{mimeType:mt,videoBitsPerSecond:20000000})}catch(x){return parent.postMessage({err:String(x.message)},'*')}
+    mr.ondataavailable=v=>{if(v.data.size)ch.push(v.data)};
     mr.onerror=()=>{rec=null;parent.postMessage({err:'حصل خطأ أثناء التسجيل'},'*')};
-    mr.onstop=()=>{
-      const fps=Math.round(frames/Math.max(0.5,(performance.now()-rs)/1000));
-      rec=null;t0=performance.now();
-      if(!ch.length)return parent.postMessage({err:'التسجيل طلع فاضي'},'*');
-      parent.postMessage({rec:new Blob(ch,{type:mt.split(';')[0]}),fps:fps},'*');
-    };
-    rec=mr;t0=performance.now();rs=t0;frames=0;mr.start(500);
+    mr.onstop=()=>{rec=null;t0=performance.now();parent.postMessage({rec:new Blob(ch,{type:mt.split(';')[0]})},'*')};
+    rec=mr;t0=performance.now();mr.start(500);
     parent.postMessage({started:D()},'*');
     setTimeout(()=>{if(mr.state==='recording')mr.stop()},(D()+0.4)*1000);
   });
-
-  const go=()=>{parent.postMessage({dur:D()},'*');requestAnimationFrame(loop)};
-  let started=false;const start=()=>{if(started)return;started=true;go()};
-  try{
-    Promise.race([
-      Promise.all([document.fonts.load('400 40px Cairo','ع'),document.fonts.load('700 40px Cairo','ع')]),
-      new Promise(r=>setTimeout(r,2500))
-    ]).then(start,start);
-  }catch(e){start()}
 }
+const harness=(js,w,h)=>'<!DOCTYPE html><html><head><meta charset="utf-8"><style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}</style></head><body><canvas id="cv" width="'+w+'" height="'+h+'"></canvas><script>window.onerror=function(m){window.__e=m}<\/script><script>try{(function(){'+js.replace(/<\/script/gi,'<\\/script')+'\n;window.__r=render;window.__d=DURATION})()}catch(e){window.__e=e.message}<\/script><script>('+rt.toString()+')('+w+','+h+')<\/script></body></html>';
+const full=()=>{const c=$('#code').value;if(!c.trim())return'';const [w,h]=SIZE[$('#ratio').value];return $('#mode').value==='video'?harness(c,w,h):c};
 
-const harness=(js,w,h,sc)=>'<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet"><style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{position:absolute;inset:0;width:100%;height:100%}</style></head><body><canvas id="cv" width="'+w+'" height="'+h+'"></canvas><script>window.__scale='+(+sc||1)+';window.onerror=function(m){window.__e=m}<\/script><script>try{(function(){'+js.replace(/<\/script/gi,'<\\/script')+'\n;window.__r=render;window.__d=DURATION})()}catch(e){window.__e=e.message}<\/script><script>('+rt.toString()+')('+w+','+h+')<\/script></body></html>';
-
-function full(){
-  const c=$('#code').value;
-  if(!c.trim())return'';
-  if(isHtml(c))return c;
-  const s=SIZE[$('#ratio').value]||SIZE['9:16'];
-  return harness(c,s[0],s[1],tweakScale);
+function busy(on,msg){document.querySelectorAll('.btn').forEach(b=>b.disabled=on);const s=$('#st');s.style.color='';s.textContent=msg||''}
+function err(e){busy(false,'');const s=$('#st');s.style.color='var(--r)';s.style.whiteSpace='pre-wrap';s.style.wordBreak='break-all';s.textContent=e.message}
+function show(code){
+  const [w,h]=SIZE[$('#ratio').value],doc=$('#mode').value==='video'?harness(code,w,h):code;
+  $('#fr').srcdoc='';
+  setTimeout(()=>{$('#fr').srcdoc=doc;const b=$('#bar');b.classList.remove('go');void b.offsetWidth;b.style.setProperty('--d',$('#dur').value+'s');b.classList.add('go')},60);
 }
-
-function busy(on,msg){
-  document.querySelectorAll('button,select').forEach(b=>b.disabled=on);
-  $('#st').textContent=msg||'';
+const P={en:'',ar:'',view:'ar',src:null};
+function pNote(){$('#pnote').textContent=P.src==='ar'?'هيتحوّل لكود بالنسخة العربي اللي عدّلتها.':P.src==='en'?'هيتحوّل لكود بالنسخة الإنجليزي اللي عدّلتها.':''}
+function pShow(){$('#prompt').value=P[P.view];$('#prompt').dir=P.view==='ar'?'rtl':'ltr';$('#plar').classList.toggle('on',P.view==='ar');$('#plen').classList.toggle('on',P.view==='en');pNote()}
+function pSync(){P[P.view]=$('#prompt').value;return P}
+function pLoad(en,ar,src){P.en=en||'';P.ar=ar||en||'';P.src=src||null;P.view='ar';pShow()}
+$('#plar').onclick=()=>{pSync();P.view='ar';pShow()};
+$('#plen').onclick=()=>{pSync();P.view='en';pShow()};
+$('#prompt').oninput=()=>{pSync();P.src=P.view;pNote()};
+async function makeCode(){
+  pSync();const ar=P.src==='ar',p=(ar?P.ar:P.en).trim();if(!p)return toast('البرومبت فاضي');
+  const [w,h]=SIZE[$('#ratio').value];
+  busy(true,'بحوّل البرومبت لكود…');
+  try{const c=clean((await ai('code',{prompt:p,lang:ar?'ar':'en',ratio:$('#ratio').value,mode:$('#mode').value})).text||'');$('#code').value=c;show(c);busy(false,'تمام، الـ B-Roll جاهز')}
+  catch(e){err(e)}
 }
-function finishRec(msg){clearTimeout(recT);recording=false;busy(false,msg||'')}
-
-function preview(){
-  if(recording)return;
-  const fr=$('#fr');
-  fr.srcdoc=full();
-  restartBar(+$('#dur').value||8);
-}
-
-function extract(raw){
-  raw=String(raw||'').trim();
-  if(raw.indexOf('```')!==-1){
-    const m=raw.match(/```[\w-]*\s*\n([\s\S]*?)```/);
-    raw=(m?m[1]:raw.replace(/^\s*```[\w-]*\s*/,'').replace(/```\s*$/,'')).trim();
-  }
-  if(!isHtml(raw)&&!/function\s+render\b/.test(raw)){
-    const i=raw.search(/<!doctype|<html/i);
-    if(i>0)raw=raw.slice(i);
-  }
-  return raw;
-}
-function check(c){
-  if(!c)return'مفيش كود';
-  if(isHtml(c))return'';
-  if(!/\brender\b/.test(c)||!/\bDURATION\b/.test(c))return'الكود لازم يحتوي على دالة render وثابت DURATION';
-  return'';
-}
-function setCode(code){
-  if(code&&!isHtml(code)&&/\brender\b/.test(code)&&!/\bDURATION\b/.test(code))code='const DURATION='+(+$('#dur').value||8)+';\n'+code;
-  rawCode=code;$('#code').value=code;
-  const err=check(code);
-  if(!err)preview();
-  return err;
-}
-
-/* ===== التوليد ===== */
 $('#go').onclick=async()=>{
-  if(recording)return;
-  const desc=$('#desc').value.trim();
-  if(!desc)return toast('اكتب وصف للـ B-Roll أولاً');
-  const endpoint=SERVER_URL;
-  if(!/^https:\/\//i.test(endpoint)){toast('رابط السيرفر لسه متحطش في الكود');return}
-  if(!$('#license').value.trim()){toast('ادخل كود التفعيل في الإعدادات');tab('set');return}
-  busy(true,'جاري توليد الـ B-Roll...');
-  const ac=new AbortController(),to=setTimeout(()=>ac.abort(),300000),t0=Date.now(),iv=setInterval(()=>{$('#st').textContent='جاري التوليد... '+Math.round((Date.now()-t0)/1000)+' ث (ممكن ياخد لحد دقيقتين)'},1000);
+  const d=$('#desc').value.trim();if(!d)return toast('اكتب وصف الأول');
+  busy(true,'بولّد الـ B-Roll… ممكن ياخد دقيقة');
   try{
-    const res=await fetch(endpoint,{
-      method:'POST',signal:ac.signal,
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify({license:$('#license').value.trim(),prompt:desc,texts:$('#texts').value.trim().replace(/\n+/g,' | '),ratio:$('#ratio').value,duration:+$('#dur').value||8,style:$('#style').value,mode:$('#mode').value,bgmode:$('#bgmode').value})
-    });
-    if(!res.ok)throw new Error('فشل الاتصال بالسيرفر: '+res.status);
-    const txt=await res.text();
-    let raw=txt,fb=false,ver='',rs='',ws='';
-    try{
-      const data=JSON.parse(txt);
-      if(data&&data.error)throw new Error(typeof data.error==='string'?data.error:JSON.stringify(data.error));
-      raw=typeof data==='string'?data:(data&&(data.code||data.result||data.text))||'';
-      fb=!!(data&&data.fallback);ver=(data&&data.version)||'';rs=(data&&data.reason)||'';ws=(data&&data.warnings)||'';
-    }catch(pe){if(pe.message&&txt.trim().startsWith('{'))throw pe}
-    const code=extract(raw);
-    if(!code)throw new Error('لم يتم استلام كود من السيرفر');
-    const err=setCode(code);
-    if(err){busy(false,'⚠️ '+err+' | نسخة السيرفر: '+(ver||'قديمة أو مش معروفة (اعمل Deploy جديد للسكريبت)')+' | بداية الرد: '+String(raw).replace(/\s+/g,' ').slice(0,140));toast('الرد مش صالح')}
-    else if(fb){busy(false,'⚠️ اتعمل تصميم بسيط لأن النموذج مقدرش ينفّذ الوصف كامل. جرّب تولّد تاني أو بسّط الوصف (الطلب ده مش بيتخصم). السبب: '+(rs||'غير معروف'));toast('تصميم بسيط (من غير خصم)')}
-    else{busy(false,ws?'تم التوليد، بس ممكن يكون في نقاط ناقصة من الوصف: '+String(ws).replace(/\s+/g,' ').slice(0,300):'تم التوليد بنجاح!');toast('تم إنشاء المشهد')}
-  }catch(err){
-    const m=err.name==='AbortError'?'السيرفر اتأخر، جرّب تاني':err.message;
-    busy(false,'حدث خطأ: '+m);toast(m);
-  }finally{clearTimeout(to);clearInterval(iv)}
+    const j=await ai('full',{desc:d,ratio:$('#ratio').value,dur:$('#dur').value,style:$('#style').value,mode:$('#mode').value});pLoad((j.prompt||'').trim(),(j.promptAr||'').trim(),null);const c=clean(j.code||'');$('#code').value=c;cur={desc:d};show(c);busy(false,'تمام، الـ B-Roll جاهز');
+  }catch(e){err(e)}
 };
+$('#regen').onclick=makeCode;
+$('#replay').onclick=()=>{const c=$('#code').value.trim();c?show(c):toast('مفيش كود')};
+$('#full').onclick=()=>{const s=$('#stage');(s.requestFullscreen||s.webkitRequestFullscreen||(()=>toast('الشاشة الكاملة مش مدعومة')) ).call(s)};
 
-/* ===== مشهد تجريبي ===== */
-const DEMO=`const DURATION=8;
-function render(ctx,t,W,H){
-  const ease=x=>1-Math.pow(1-x,3),p=Math.min(1,t/5);
-  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0E1A21');g.addColorStop(1,'#1d3440');
-  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-  ctx.direction='rtl';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.globalAlpha=Math.min(1,t/0.8);
-  ctx.fillStyle='#E9F0F2';ctx.font='bold 76px Cairo, Tahoma, sans-serif';
-  ctx.fillText('نمو المشتركين',W/2,H*0.14);
-  ctx.globalAlpha=1;
-  const vals=[.15,.3,.5,.72,1],bw=W*0.12,gap=W*0.04,x0=(W-(bw*5+gap*4))/2,base=H*0.72,mh=H*0.42;
-  vals.forEach((v,i)=>{
-    const k=ease(Math.max(0,Math.min(1,(p*5-i*0.6)/1.6)));
-    const h=mh*v*k;
-    ctx.fillStyle=i===4?'#FFB547':'#3a6a7d';
-    ctx.fillRect(x0+i*(bw+gap),base-h,bw,h);
-  });
-  ctx.fillStyle='#FFB547';ctx.font='bold 120px Cairo, Tahoma, sans-serif';
-  ctx.fillText(Math.round(100000*ease(p)).toLocaleString('en-US'),W/2,H*0.84);
-}`;
-$('#demo').onclick=()=>{if(recording)return;$('#desc').value=$('#desc').value||'مشهد تجريبي';setCode(DEMO);toast('تم تحميل المشهد التجريبي')};
+const fname=()=>(((cur.desc||'broll').slice(0,24).replace(/[^\p{L}\p{N}]+/gu,'-'))||'broll')+'.html';
+$('#dl').onclick=()=>{const c=full();if(!c.trim())return toast('مفيش كود');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/html'}));a.download=fname();document.body.appendChild(a);a.click();a.remove();toast('اتنزّل')};
+$('#sh').onclick=async()=>{const c=full();if(!c.trim())return toast('مفيش كود');const f=new File([c],fname(),{type:'text/html'});if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]})}catch(e){}}else toast('المشاركة مش مدعومة، استخدم التنزيل')};
 
-$('#replay').onclick=()=>{if(!recording)preview()};
-
-$('#full').onclick=()=>{
-  const s=$('#stage');
-  if(document.fullscreenElement||document.webkitFullscreenElement){(document.exitFullscreen||document.webkitExitFullscreen).call(document);return}
-  const f=s.requestFullscreen||s.webkitRequestFullscreen;
-  if(f){try{const r=f.call(s);if(r&&r.catch)r.catch(()=>toast('ملء الشاشة مش مدعوم هنا'))}catch(e){toast('ملء الشاشة مش مدعوم هنا')}}
-  else toast('ملء الشاشة مش مدعوم في المتصفح ده');
+$('#save').onclick=()=>{
+  const code=$('#code').value;if(!code.trim())return toast('مفيش حاجة تتحفظ');
+  const lib=ls.get('lib',[]);
+  lib.unshift({id:Date.now(),title:($('#desc').value.trim()||'B-Roll').slice(0,60),desc:$('#desc').value,prompt:pSync().en,promptAr:P.ar,src:P.src,code,ratio:$('#ratio').value,dur:$('#dur').value,mode:$('#mode').value,t:Date.now()});
+  if(ls.set('lib',lib))toast('اتحفظ في المحفوظات');
 };
-
-/* ===== تسجيل الفيديو ===== */
+function renderLib(){
+  const lib=ls.get('lib',[]);
+  $('#list').innerHTML=lib.length?lib.map(x=>'<div class="it"><div style="flex:1;min-width:0"><b>'+esc(x.title)+'</b><small>'+esc(x.ratio)+' · '+esc(x.dur)+'s · '+new Date(x.t).toLocaleDateString('ar-EG')+'</small></div><button class="g" data-o="'+x.id+'">فتح</button><button class="g" data-d="'+x.id+'">حذف</button></div>').join(''):'<p class="note">لسه مفيش حاجة محفوظة. ولّد B-Roll واضغط حفظ.</p>';
+}
+$('#list').onclick=e=>{
+  const o=e.target.dataset.o,d=e.target.dataset.d,lib=ls.get('lib',[]);
+  if(o){const x=lib.find(i=>i.id==o);if(!x)return;$('#desc').value=x.desc||'';pLoad(x.prompt,x.promptAr,x.src);$('#code').value=x.code;$('#ratio').value=x.ratio;$('#dur').value=x.dur;$('#mode').value=x.mode||'html';cur={desc:x.desc};tc();stageRatio();modeUI();tab('new');show(x.code)}
+  if(d&&confirm('تحذف العنصر ده؟')){ls.set('lib',lib.filter(i=>i.id!=d));renderLib()}
+};
+let vid=null,vurl=null;
+function modeUI(){$('#rec').hidden=$('#mode').value!=='video';$('#vid').hidden=true;vid=null}
+$('#mode').onchange=()=>{modeUI();if($('#code').value.trim())toast('غيّرت الناتج، ولّد من جديد')};
+modeUI();
 $('#rec').onclick=()=>{
-  if(recording)return;
-  const c=$('#code').value.trim();
-  if(!c)return toast('ولّد مشهد الأول');
-  if(isHtml(c))return toast('التسجيل متاح لمشاهد الفيديو بس (مش صفحات HTML)');
-  const fr=$('#fr');
-  if(!fr.contentWindow)return toast('المعاينة غير جاهزة');
-  recording=true;busy(true,'جاري بدء التسجيل...');
-  clearTimeout(recT);recT=setTimeout(()=>finishRec('التسجيل ماستجابش، جرّب تاني'),7000);
-  fr.contentWindow.postMessage({cmd:'rec'},'*');
+  if(!$('#code').value.trim())return toast('ولّد B-Roll الأول');
+  vid=null;$('#vid').hidden=true;
+  try{$('#fr').contentWindow.postMessage({cmd:'rec'},'*')}catch(e){toast('شغّل المعاينة الأول')}
 };
-
-window.addEventListener('message',e=>{
-  if(e.source!==$('#fr').contentWindow||!e.data)return;
-  const d=e.data;
-  if(d.dur){
-    $('#tc').textContent=fmt(d.dur);
-    if(!recording)restartBar(d.dur);
-  }else if(d.jserr){
-    $('#st').textContent='⚠️ خطأ في كود المشهد: '+d.jserr;toast('في خطأ في كود المشهد');
-  }else if(d.started){
-    clearTimeout(recT);
-    recT=setTimeout(()=>finishRec('التسجيل اتأخر، جرّب تاني'),(d.started+10)*1000);
-    $('#st').textContent='جاري تسجيل الفيديو ('+d.started+' ثانية)... سيب الشاشة مفتوحة';
-    restartBar(d.started);
-  }else if(d.rec){
-    finishRec('اكتمل التسجيل بنجاح!');
-    const blob=d.rec;
-    if(vidUrl)URL.revokeObjectURL(vidUrl);
-    vidUrl=URL.createObjectURL(blob);
-    const pv=$('#pv');pv.src=vidUrl;pv.load();
-    $('#vid').hidden=false;
-    $('#vinfo').textContent='الحجم: '+(blob.size/1048576).toFixed(2)+' ميجابايت | الصيغة: '+blob.type+(d.fps?' | سرعة الرسم: '+d.fps+' إطار/ث':'')+(d.fps&&d.fps<24?' ⚠️ الجهاز بطيء والفيديو ممكن يطلع متقطع، جرّب نسبة أصغر أو جهاز أقوى':'');
-    const name='MotionForge-'+Date.now()+'.'+(blob.type.includes('mp4')?'mp4':'webm');
-    const dlv=$('#dlv');dlv.href=vidUrl;dlv.download=name;
-    $('#shv').onclick=()=>{
-      const file=new File([blob],name,{type:blob.type});
-      if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:'MotionForge'}).catch(()=>{})}
-      else toast('المشاركة المباشرة مش مدعومة، استخدم زر التنزيل');
-    };
-    $('#vid').scrollIntoView({behavior:'smooth',block:'center'});
-  }else if(d.err){
-    finishRec('خطأ أثناء التسجيل: '+d.err);toast(d.err);
+addEventListener('message',e=>{
+  const d=e.data;if(!d||e.source!==$('#fr').contentWindow)return;
+  if(d.started)busy(true,'بسجّل… سيب الشاشة مفتوحة، حوالي '+Math.ceil(d.started)+' ثانية');
+  if(d.err)err(new Error(d.err));
+  if(d.rec){
+    vid=d.rec;if(vurl)URL.revokeObjectURL(vurl);vurl=URL.createObjectURL(vid);
+    const n=vname(),a=$('#dlv');a.href=vurl;a.download=n;$('#pv').src=vurl;
+    $('#vinfo').textContent='الصيغة: '+(vid.type.includes('mp4')?'MP4':'WebM')+' · '+(vid.size/1048576).toFixed(1)+' MB · الاسم: '+n+(vid.size<51200?' · ⚠ الفيديو صغير جداً، غالباً التسجيل فشل':' · لو التنزيل ماشتغلش، اضغط على ⋮ جوه المشغّل واختار تنزيل')+'.';
+    $('#vid').hidden=false;busy(false,'الفيديو جاهز');$('#vid').scrollIntoView({behavior:'smooth'});
   }
 });
-
-/* ===== المحفوظات ===== */
-$('#save').onclick=()=>{
-  const code=$('#code').value.trim();
-  if(!code)return toast('مفيش كود للحفظ');
-  let lib=ls.get('mf_lib',[]);
-  lib.unshift({id:'mf_'+Date.now(),desc:$('#desc').value.trim()||'مشروع بدون عنوان',ratio:$('#ratio').value,dur:$('#dur').value,style:$('#style').value,mode:$('#mode').value,code:code});
-  let ok=ls.set('mf_lib',lib.slice(0,40));
-  if(!ok){lib=lib.slice(0,10);ok=ls.set('mf_lib',lib)}
-  if(ok)toast('تم الحفظ في المحفوظات');
-};
-
-function renderLib(){
-  const list=$('#list'),items=ls.get('mf_lib',[]);
-  if(!items.length){list.innerHTML='<p class="note" style="text-align:center;padding:24px 0">لا توجد عناصر محفوظة حتى الآن.</p>';return}
-  list.innerHTML=items.map(it=>'<div class="it"><b>'+esc(it.desc)+'</b><small>'+esc(it.ratio)+' | '+esc(it.dur)+'ث</small><button class="g load-btn" data-id="'+esc(it.id)+'">فتح</button><button class="g del-btn" data-id="'+esc(it.id)+'" style="color:var(--r)">حذف</button></div>').join('');
-  list.querySelectorAll('.load-btn').forEach(b=>b.onclick=()=>{
-    const f=items.find(x=>x.id===b.dataset.id);if(!f)return;
-    $('#desc').value=f.desc||'';
-    $('#ratio').value=f.ratio||'9:16';
-    $('#dur').value=f.dur||'8';
-    $('#style').value=f.style||$('#style').options[0].value;
-    $('#mode').value=f.mode||'video';
-    tc();stageRatio();setCode(f.code||'');
-    tab('new');toast('تم استرجاع المشروع');
-  });
-  list.querySelectorAll('.del-btn').forEach(b=>b.onclick=()=>{
-    ls.set('mf_lib',items.filter(x=>x.id!==b.dataset.id));
-    renderLib();toast('تم الحذف');
-  });
+const vname=()=>fname().replace('.html','.'+(vid&&vid.type.includes('mp4')?'mp4':'webm'));
+$('#shv').onclick=async()=>{if(!vid)return;const f=new File([vid],vname(),{type:vid.type});if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]})}catch(e){}}else toast(window.isSecureContext?'المشاركة مش مدعومة على جهازك، استخدم زرار نزّل':'المشاركة محتاجة رابط https، استخدم زرار نزّل')};
+const act={code:ls.get('code',''),name:ls.get('cname','')};
+function actUI(msg,bad){
+  const s=$('#astat');
+  s.style.color=bad?'var(--r)':(act.code?'var(--a)':'');
+  s.textContent=msg||(act.code?'مفعّل'+(act.name?' باسم: '+act.name:''):'التطبيق مش مفعّل لسه. اكتب كود التفعيل فوق.');
+  $('#aout').hidden=!act.code;
 }
-
-/* ===== تنزيل ومشاركة ===== */
-$('#dl').onclick=()=>{
-  const c=full();
-  if(!c)return toast('مفيش محتوى للتنزيل');
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([c],{type:'text/html;charset=utf-8'}));
-  a.download='MotionForge-'+Date.now()+'.html';
-  document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
-  toast('تم بدء التنزيل');
+async function server(body){
+  if(SERVER_URL.indexOf('https://script.google.com/')!==0)throw new Error('رابط السيرفر لسه متحطش جوه الملف (SERVER_URL)');
+  let r,j;
+  try{r=await fetch(SERVER_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)})}
+  catch(e){throw new Error('مفيش اتصال بالسيرفر، اتأكد من النت')}
+  try{j=await r.json()}catch(e){throw new Error('رد السيرفر مش مفهوم. اتأكد إن الـ Web App متنشر بصلاحية Anyone')}
+  if(!j.ok){const e=new Error(j.error||'خطأ من السيرفر');e.invalid=!!j.invalid;throw e}
+  return j;
+}
+function deact(){act.code='';act.name='';ls.set('code','');ls.set('cname','');actUI()}
+async function srv(task,p){
+  if(!act.code){toast('فعّل التطبيق بكود التفعيل الأول');tab('set');throw new Error('فعّل التطبيق بكود التفعيل الأول')}
+  try{return await server(Object.assign({action:task,code:act.code},p))}
+  catch(e){if(e.invalid){deact();tab('set');actUI(e.message,true)}throw e}
+}
+async function ai(task,p){
+  if(task==='full'){
+    const a=await srv('prompt',p);
+    $('#st').textContent='بحوّل البرومبت لكود…';
+    const b=await srv('code',{prompt:a.text,ratio:p.ratio,mode:p.mode});
+    return{prompt:a.text,promptAr:a.ar||'',code:b.text};
+  }
+  return srv('code',p);
+}
+$('#abtn').onclick=async()=>{
+  const c=$('#acode').value.trim();if(!c)return toast('اكتب كود التفعيل');
+  const b=$('#abtn');b.disabled=true;actUI('بتحقق من الكود…');
+  try{const j=await server({action:'verify',code:c});act.code=c;act.name=j.name||'';ls.set('code',c);ls.set('cname',act.name);$('#acode').value='';actUI();toast('تم التفعيل')}
+  catch(e){actUI(e.message,true)}
+  finally{b.disabled=false}
 };
-
-$('#sh').onclick=async()=>{
-  const c=full();
-  if(!c)return toast('مفيش محتوى للمشاركة');
-  try{
-    const file=new File([c],'broll.html',{type:'text/html'});
-    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'MotionForge B-Roll'});return}
-  }catch(e){if(e&&e.name==='AbortError')return}
-  try{await navigator.clipboard.writeText(c);toast('تم نسخ الكود للحافظة')}
-  catch(e){toast('تعذر المشاركة، استخدم تنزيل HTML')}
-};
+$('#aout').onclick=()=>{if(confirm('تلغي التفعيل على الجهاز ده؟'))deact()};
+actUI();if(!act.code)tab('set');
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
